@@ -15,20 +15,23 @@ function getCategoriesList(){
     for (category of categories)
     makeCategoryList(category)
     })  
-    // make Add A Category button function to go here
-
 }
 
-function makeCategoryList(category) {
-    /* make const in htmal file for category to attach to
-        attach cat element to const
-        attach cat el const to html const
-    */
+function makeCategoryList(category){
     const categoryList = document.getElementById("category-list")
-    const categoryElement = document.createElement("h2") 
-    categoryElement.innerText = category.name
-    categoryList.appendChild(categoryElement)
+    const categoryListBr = document.createElement("br")
 
-    console.log(category)
+    const categoryElement = document.createElement("a") 
+    categoryElement.setAttribute("href", CATEGORIES_URL)
+    categoryElement.innerText = category.name
+
+    categoryList.appendChild(categoryElement).appendChild(categoryListBr)
+
+    showActivities()
 }
 
+function showActivities(){
+    console.log("ready for activities")
+        /* add event listener on click, prevent_default action 
+        iterate over category to display category.activity */
+}
