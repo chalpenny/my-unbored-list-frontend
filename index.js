@@ -42,16 +42,25 @@ function makeCategoryList(category){
 
     //SHOW ACTIVITIES ON CLICK
     categoryElement.addEventListener("click", () => {
-        const activitiesList = document.createElement("li")
+        const activitiesList = document.createElement("ul")
+        activitiesList.id = `parent-category-${category.id}`
         activitiesList.classList += "activities"
         activitiesList.setAttribute("parent-category", category.id)
-        activitiesList.innerText = " activity here" 
-            //  iterate over category.activity to display name, url, notes */
+
+        const list = category.activities
+        list.forEach((el) => {
+            const activitiesInfo = el.name + " " + el.notes + " " + el.url
+            activitiesList.innerText = activitiesInfo 
+        })
 
         categoryElement.appendChild(activitiesList) 
     })
 
 }
+
+
+
+
  //Add URL
    // categoryElement.addEventListener("click", showActivities(category))
     // const categoryElement = document.createElement("a") 
