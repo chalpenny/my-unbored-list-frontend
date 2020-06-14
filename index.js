@@ -6,6 +6,11 @@ const ACTIVITIES_URL = `${BACKEND_URL}/activities`
 
 document.addEventListener("DOMContentLoaded", () => {
    getCategories()
+
+   const categoryForm = document.getElementById("add-category-form")
+   categoryForm.addEventListener("submit", (event) => submitCategoryForm(event))
+
+
 })
 
 function getCategories(){
@@ -13,7 +18,8 @@ function getCategories(){
     .then(response => response.json())
     .then(categories => {
     for (category of categories)
-    makeCategoryList(category)
+        makeCategoryList(category)
+
     //activities edit, delete
     })  
 }
@@ -32,7 +38,7 @@ function makeCategoryList(category){
     editButton.setAttribute("edit-category", category.id)
     editButton.innerText = "edit"
     categoryElement.appendChild(editButton)
-
+ 
     //DELETE BUTTON
     const deleteButton = document.createElement("button")
     deleteButton.classList += "delete"
@@ -49,16 +55,41 @@ function makeCategoryList(category){
 
         const list = category.activities
         list.forEach((el) => {
-            const activitiesInfo = el.name + " " + el.notes + " " + el.url
-            activitiesList.innerText = activitiesInfo 
+            const activitiesInfo = el.name + " " + el.url + " " + el.notes
+            activitiesList.innerText += activitiesInfo 
         })
-
         categoryElement.appendChild(activitiesList) 
     })
-
 }
 
+function submitCategoryForm(event) {
+    event.preventDefault()
+    var newCatName = {
+        name: document.querySelector("#title").value
+    }
+    postFetch(newCatName)
+}
 
+function postFetch(name){
+    console.log(name, category)
+
+    // fetch (CATEGORIES_URL, {
+    //     method: "POST",
+    //     headers: {"Content-Type": "application/json"},
+    //     body: JSON.stringify({
+    //         name: name
+    //     })
+    // .then(response => response.json())
+    // .then(category => {
+    //     const categoryData = category
+    //     const categoryMarkup = 
+    //         <h2>`${category}`
+    //         <button class="edit" edit-category="`${name.id}`">edit</button>
+    //         <button class="delete" delete-category="id somehow">delete</button></h2>
+    // document.getElementById("category-list").innterHTML += categoryMarkup
+    // })
+    // })
+}
 
 
  //Add URL
