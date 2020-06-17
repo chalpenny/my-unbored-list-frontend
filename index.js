@@ -36,16 +36,18 @@ function makeCategoryList(category){
     //EDIT BUTTON
     const editButton = document.createElement("button")
     editButton.classList += "edit"
-    editButton.setAttribute("edit-category", category.id)
+    editButton.setAttribute("edit", category.id)
     editButton.innerText = "edit"
     categoryElement.appendChild(editButton)
  
     //DELETE BUTTON
     const deleteButton = document.createElement("button")
+    deleteButton.id = "delete-button"
     deleteButton.classList += "delete"
-    deleteButton.setAttribute("delete-category", category.id)
+    deleteButton.setAttribute("delete", category.id)
     deleteButton.innerText = "delete"
     categoryElement.appendChild(deleteButton)
+    deleteButton.addEventListener("click", deleteCategory)
 
     //SHOW ACTIVITIES ON CLICK
     categoryElement.addEventListener("click", () => {
@@ -60,14 +62,13 @@ function makeCategoryList(category){
             activitiesList.innerText += activitiesInfo 
         })
         categoryElement.appendChild(activitiesList) 
-        addActivtiesForm()
+        //addActivtiesForm()
     })
 
 }
 
 
-
-//CATEGORY FORM
+//ADD NEW CATEGORY FORM
 function submitCategoryForm(event) {
     event.preventDefault()
     const newCategoryName = document.querySelector("#title").value
@@ -78,28 +79,32 @@ function submitCategoryForm(event) {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(categoryName)
+        }
+        fetch (CATEGORIES_URL, configObj)
+            .then(function(resp){
+                return resp.json()
+            })
+            .then(function(newCat){
+                makeCategoryList(newCat)
+        })
     }
-    debugger
-    fetch (CATEGORIES_URL, configObj)
+
+//DELETE CATEGORY
+function deleteCategory(){
+    const deleteId = event.target.attributes.delete.value
+    const configObj = {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"}
+        }
+        fetch (`${CATEGORIES_URL}/${deleteId}`, configObj)
         .then(function(resp){
             return resp.json()
         })
-        .then(function(newCat){
-            console.log(newCat)
-            makeCategoryList(newCat)
+        .then(function(category){
+           const deleteBut = document.getElementById("delete-button")
+           deleteBut.remove
         })
-        }
-
-    //     const categoryData = category
-    //     const categoryMarkup = 
-    //         <h2>`${category}`
-    //         <button class="edit" edit-category="`${name.id}`">edit</button>
-    //         <button class="delete" delete-category="id somehow">delete</button></h2>
-    // document.getElementById("category-list").innterHTML += categoryMarkup
-    // })
-    // })
-   
-
+    }
 
 
 
