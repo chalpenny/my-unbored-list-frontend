@@ -29,6 +29,7 @@ function makeCategoryList(category){
     //LIST CATEGORIES
     const categoryList = document.getElementById("category-list")
     const categoryElement = document.createElement("h2") 
+    categoryElement.id = "category-name"
     categoryElement.innerText = category.name
     categoryList.appendChild(categoryElement)
 
@@ -59,28 +60,36 @@ function makeCategoryList(category){
             activitiesList.innerText += activitiesInfo 
         })
         categoryElement.appendChild(activitiesList) 
+        addActivtiesForm()
     })
+
 }
 
+
+
+//CATEGORY FORM
 function submitCategoryForm(event) {
     event.preventDefault()
-    var newCatName = {
-        name: document.querySelector("#title").value
+    const newCategoryName = document.querySelector("#title").value
+    let categoryName = {
+        name: newCategoryName
     }
-    postFetch(newCatName)
-}
+    const configObj = {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(categoryName)
+    }
+    debugger
+    fetch (CATEGORIES_URL, configObj)
+        .then(function(resp){
+            return resp.json()
+        })
+        .then(function(newCat){
+            console.log(newCat)
+            makeCategoryList(newCat)
+        })
+        }
 
-function postFetch(name){
-    console.log(name, category)
-
-    // fetch (CATEGORIES_URL, {
-    //     method: "POST",
-    //     headers: {"Content-Type": "application/json"},
-    //     body: JSON.stringify({
-    //         name: name
-    //     })
-    // .then(response => response.json())
-    // .then(category => {
     //     const categoryData = category
     //     const categoryMarkup = 
     //         <h2>`${category}`
@@ -89,10 +98,23 @@ function postFetch(name){
     // document.getElementById("category-list").innterHTML += categoryMarkup
     // })
     // })
-}
+   
 
 
- //Add URL
+
+
+    // function addActivtiesForm() {
+    //     const parentActivity = document.getElementById(`parent-category-${category.id}`)
+        
+    //     const newActivityButton = document.createElement("form")
+    //     newActivityButton.id = "add-activity-form"
+        
+    //     categoryElement.appendChild(newActivityButton)}
+    
+
+
+
+     //Add URL
    // categoryElement.addEventListener("click", showActivities(category))
     // const categoryElement = document.createElement("a") 
     // categoryElement.setAttribute("href", CATEGORIES_URL)
