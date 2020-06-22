@@ -36,15 +36,13 @@ function makeCategoryList(category){
 
     //EDIT BUTTON
     const editButton = document.createElement("button")
-    editButton.classList += "edit"
     editButton.setAttribute("edit", category.id)
     editButton.innerText = "edit"
     categoryElement.appendChild(editButton)
+    editButton.addEventListener("click", editCategory)
  
     //DELETE BUTTON
     const deleteButton = document.createElement("button")
-    deleteButton.id = "delete-button"
-    deleteButton.classList += "delete"
     deleteButton.setAttribute("delete", category.id)
     deleteButton.innerText = "delete"
     categoryElement.appendChild(deleteButton)
@@ -52,6 +50,7 @@ function makeCategoryList(category){
 
     //SHOW ACTIVITIES ON CLICK
     categoryElement.addEventListener("click", () => {
+        //addActivtiesForm()
         const activitiesList = document.createElement("ul")
         activitiesList.id = `parent-category-${category.id}`
         activitiesList.classList += "activities"
@@ -63,7 +62,6 @@ function makeCategoryList(category){
             activitiesList.innerText += activitiesInfo 
         })
         categoryElement.appendChild(activitiesList) 
-        //addActivtiesForm()
     })
 }
 
@@ -80,6 +78,7 @@ function submitCategoryForm(event) {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(categoryName)
         }
+
         fetch (CATEGORIES_URL, configObj)
             .then(function(resp){
                 return resp.json()
@@ -87,20 +86,40 @@ function submitCategoryForm(event) {
             .then(function(newCat){
                 makeCategoryList(newCat)
         })
+    document.getElementById("title").value=""
 }
+
+
+//EDIT CATEGORY
+function editCategory(){
+    const editButId = event.target.attributes.edit.value
+    const configObj = {
+        method: "PATCH",
+        headers: {"Content-Type": "application/json"},
+        }
+
+        fetch (`${CATEGORIES_URL}` + "/" + `${editButId}`, configObj)
+        .then(function(resp){
+            return resp.json()
+        })
+        .then(function(category){
+            const someData = {
+                name: document.getElementById(`category-name-${category.id}`).value
+               }
+               console.log(someData)
+               console.log(category)
+        })
+}
+
 
 //DELETE CATEGORY
 function deleteCategory(){
-    event.preventDefault()
     const deleteButId = event.target.attributes.delete.value
-    // let deleteId = {
-    //     id: deleteButId
-    // }
     const configObj = {
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
-        //body: JSON.stringify(deleteId)
         }
+
         fetch (`${CATEGORIES_URL}` + "/" + `${deleteButId}`, configObj)
         .then(function(resp){
             return resp.json()
