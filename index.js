@@ -24,12 +24,13 @@ function getCategories(){
     })  
 }
 
+
 function makeCategoryList(category){
 
     //LIST CATEGORIES
     const categoryList = document.getElementById("category-list")
     const categoryElement = document.createElement("h2") 
-    categoryElement.id = "category-name"
+    categoryElement.id = `category-name-${category.id}`
     categoryElement.innerText = category.name
     categoryList.appendChild(categoryElement)
 
@@ -64,11 +65,10 @@ function makeCategoryList(category){
         categoryElement.appendChild(activitiesList) 
         //addActivtiesForm()
     })
-
 }
 
 
-//ADD NEW CATEGORY FORM
+//ADD NEW CATEGORY
 function submitCategoryForm(event) {
     event.preventDefault()
     const newCategoryName = document.querySelector("#title").value
@@ -87,24 +87,29 @@ function submitCategoryForm(event) {
             .then(function(newCat){
                 makeCategoryList(newCat)
         })
-    }
+}
 
 //DELETE CATEGORY
 function deleteCategory(){
-    const deleteId = event.target.attributes.delete.value
+    event.preventDefault()
+    const deleteButId = event.target.attributes.delete.value
+    // let deleteId = {
+    //     id: deleteButId
+    // }
     const configObj = {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"}
+        headers: {"Content-Type": "application/json"},
+        //body: JSON.stringify(deleteId)
         }
-        fetch (`${CATEGORIES_URL}/${deleteId}`, configObj)
+        fetch (`${CATEGORIES_URL}` + "/" + `${deleteButId}`, configObj)
         .then(function(resp){
             return resp.json()
         })
         .then(function(category){
-           const deleteBut = document.getElementById("delete-button")
-           deleteBut.remove
+         const deleteBut = document.getElementById(`category-name-${category.id}`)
+         deleteBut.remove()
         })
-    }
+}
 
 
 
