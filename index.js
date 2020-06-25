@@ -25,7 +25,7 @@ function makeCategoryList(category){
 
     //LIST CATEGORIES
     const categoryList = document.getElementById("category-list")
-    const categoryElement = document.createElement("h2") 
+    const categoryElement = document.createElement("h5") 
     categoryElement.id = `category-name-${category.id}`
     categoryElement.innerText = category.name
     categoryList.appendChild(categoryElement)
@@ -46,7 +46,7 @@ function makeCategoryList(category){
 
     //SHOW ACTIVITIES ON CLICK
     categoryElement.addEventListener("click", () => {
-        const activitiesList = document.createElement("ul")
+        const activitiesList = document.createElement("div")
         activitiesList.id = `parent-category-${category.id}`
         activitiesList.classList += "activities"
         activitiesList.setAttribute("parent-category", category.id)
@@ -55,9 +55,12 @@ function makeCategoryList(category){
         list.forEach((el) => {
             const activitiesInfo = el.name + " " + el.url + " " + el.notes
             activitiesList.innerText += activitiesInfo 
+            categoryElement.appendChild(activitiesList)
+            deleteActivityButton(el)
+  
+
         })
         addActivityButton(category)
-        categoryElement.appendChild(activitiesList)  
     })
 }
 
@@ -127,7 +130,7 @@ function deleteCategory(){
 }
 
 
-//ACTIVITY BUTTON
+//ADD ACTIVITY BUTTON
 function addActivityButton(category) {
     const categoryElement = document.getElementById(`category-name-${category.id}`)
     const newActivityButton = document.createElement("button")
@@ -160,7 +163,7 @@ function addActivityButton(category) {
         newForm.appendChild(submitBut);
         
         categoryElement.appendChild(newForm);
-        newForm.addEventListener("click", submitActivityForm)
+        newForm.addEventListener("submit", submitActivityForm)
 
     }
 }
@@ -195,12 +198,53 @@ function submitActivityForm(event) {
             .then(function(resp){
                 return resp.json()
             })
-            .then(function(newAct){
-                console.log(newAct)
-        })
-    }
+            .then(function(newActivity){
+                console.log(newActivity)
+                
+                const activitiesList = document.getElementById(`parent-category-${newActivity.category.id}`)
+                const activityData = document.createElement("ul")
+                activityData.id = `activity-${newActivity.id}`
+                // activitiesList.classList += "activities"
+                // activitiesList.setAttribute("parent-category", newActivity.category.id)
+                debugger
+                var activityInfo = newActivity.name + " " + newActivity.url + " " + newActivity.notes
+                activityData.innerHTML += activityInfo
+                activitiesList.appendChild(activityData) 
+                   
+            })
+}
 
-   
+//DELETE ACTIVITY BUTTON
+function deleteActivityButton(el) {
+    console.log(el)
+    // const deleteButton = document.createElement("button")
+    // deleteButton.setAttribute("delete", el.id)
+    // deleteButton.innerText = "delete" 
+    
+    // const categoryList = document.getElementById(`activity-${el.id}`)
+    // categoryList.appendChild(deleteButton)
+    // //deleteButton.addEventListener("click", deleteActivity)
+}
+
+//DELETE ACTIVITY
+function deleteActivity(){
+    const deleteButId = event.target.attributes.delete.value
+    const configObj = {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"},
+        }
+
+        fetch (`${CATEGORIES_URL}` + "/" + `${deleteButId}`, configObj)
+        .then(function(resp){
+            return resp.json()
+        })
+        .then(function(category){
+         const deleteBut = document.getElementById(`category-name-${category.id}`)
+         deleteBut.remove()
+        })
+}
+
+
     // event.preventDefault()
     // const newCategoryName = document.querySelector("#title").value
     // let categoryName = {
@@ -299,4 +343,11 @@ function submitActivityForm(event) {
     // categoryElement.innerText = category.name
 
 
-  
+    /*
+    create a JS class
+    create prototype
+
+    create one method for rendering activities
+
+    either create all your html elements at the beg and hide them or at each click delete them all and rerender them, to avoid the duplicate listings.  OR, a validation. 
+    */
