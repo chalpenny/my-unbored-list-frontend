@@ -49,15 +49,7 @@ function makeCategoryList(category){
         //SHOW ACTIVITIES
         const list = category.activities
         list.forEach((el) => {
-            const activitiesList = document.createElement("ul")
-            activitiesList.id = `parent-category-${category.id}`
-            activitiesList.classList += "activities"
-            activitiesList.setAttribute("parent-category", category.id)
-
-            const activitiesInfo = el.name + " " + el.url + " " + el.notes
-            activitiesList.innerText += activitiesInfo 
-            categoryElement.appendChild(activitiesList)
-            activityDeleteButton(el)
+           makeActivityList(el, category)
         })
         activityAddButton(category)
     })
@@ -199,18 +191,21 @@ function submitActivityForm(event) {
             })
             .then(function(data){
                 let newActivity = new Activity(data)
-                let parent = document.getElementById(`parent-category-${newActivity.category_id}`).innerHTML += newActivity.render()
-
-
-                // const activitiesList = document.getElementById(`parent-category-${newActivity.category.id}`)
-                
-                // activityData.id = `activity-${newActivity.id}`
-                // // activitiesList.classList += "activities"
-                
-                // var activityInfo = newActivity.name + " " + newActivity.url + " " + newActivity.notes
-                // // activitiesList.appendChild(activityData) 
-                
+                makeActivityList(newActivity, `${newActivity.category.id}`)                
             })
+}
+
+// LIST ACTIVITIES
+function makeActivityList(el, category) {
+    const activitiesList = document.createElement("ul")
+    activitiesList.id = `parent-category-${category.id}`
+    activitiesList.classList += "activity"
+    activitiesList.setAttribute("parent-category", category.id)
+
+    const activitiesInfo = el.name + " " + el.url + " " + el.notes
+    activitiesList.innerText += activitiesInfo 
+    document.getElementById(`category-name-${category.id}`).appendChild(activitiesList)
+    activityDeleteButton(el)
 }
 
 //ACTIVITY DELETE BUTTON
