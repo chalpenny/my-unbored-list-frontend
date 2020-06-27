@@ -30,42 +30,41 @@ function makeCategoryList(category){
     categoryElement.innerText = category.name
     categoryList.appendChild(categoryElement)
 
-    //EDIT BUTTON
-    const editButton = document.createElement("button")
-    editButton.setAttribute("edit", category.id)
-    editButton.innerText = "edit"
-    categoryElement.appendChild(editButton)
-    editButton.addEventListener("click", editCategory)
- 
-    //DELETE BUTTON
-    const deleteButton = document.createElement("button")
-    deleteButton.setAttribute("delete", category.id)
-    deleteButton.innerText = "delete"
-    categoryElement.appendChild(deleteButton)
-    deleteButton.addEventListener("click", deleteCategory)
+    // //EDIT BUTTON
+    // const editButton = document.createElement("button")
+    // editButton.setAttribute("edit", category.id)
+    // editButton.innerText = "edit"
+    // categoryElement.appendChild(editButton)
+    // editButton.addEventListener("click", editCategory)
 
-    //SHOW ACTIVITIES ON CLICK
     categoryElement.addEventListener("click", () => {
-        const activitiesList = document.createElement("div")
-        activitiesList.id = `parent-category-${category.id}`
-        activitiesList.classList += "activities"
-        activitiesList.setAttribute("parent-category", category.id)
 
+        //DELETE BUTTON
+        const deleteButton = document.createElement("button")
+        deleteButton.setAttribute("delete", category.id)
+        deleteButton.innerText = "delete"
+        categoryElement.appendChild(deleteButton)
+        deleteButton.addEventListener("click", deleteCategory)
+
+        //SHOW ACTIVITIES
         const list = category.activities
         list.forEach((el) => {
+            const activitiesList = document.createElement("ul")
+            activitiesList.id = `parent-category-${category.id}`
+            activitiesList.classList += "activities"
+            activitiesList.setAttribute("parent-category", category.id)
+
             const activitiesInfo = el.name + " " + el.url + " " + el.notes
             activitiesList.innerText += activitiesInfo 
             categoryElement.appendChild(activitiesList)
-            deleteActivityButton(el)
-  
-
+            activityDeleteButton(el)
         })
-        addActivityButton(category)
+        activityAddButton(category)
     })
 }
 
 
-//ADD NEW CATEGORY
+//CATEGORY ADD NEW 
 function submitCategoryForm(event) {
     event.preventDefault()
     const newCategoryName = document.querySelector("#title").value
@@ -89,26 +88,26 @@ function submitCategoryForm(event) {
 }
 
 
-//EDIT CATEGORY
-function editCategory(){
-    const editButId = event.target.attributes.edit.value
-    const configObj = {
-        method: "PATCH",
-        headers: {"Content-Type": "application/json"},
-        }
+// //EDIT CATEGORY
+// function editCategory(){
+//     const editButId = event.target.attributes.edit.value
+//     const configObj = {
+//         method: "PATCH",
+//         headers: {"Content-Type": "application/json"},
+//         }
 
-        fetch (`${CATEGORIES_URL}` + "/" + `${editButId}`, configObj)
-        .then(function(resp){
-            return resp.json()
-        })
-        .then(function(category){
-            const someData = {
-                name: document.getElementById(`category-name-${category.id}`).value
-               }
-               console.log(someData)
-               console.log(category)
-        })
-}
+//         fetch (`${CATEGORIES_URL}` + "/" + `${editButId}`, configObj)
+//         .then(function(resp){
+//             return resp.json()
+//         })
+//         .then(function(category){
+//             const someData = {
+//                 name: document.getElementById(`category-name-${category.id}`).value
+//                }
+//             //    console.log(someData)
+//             //    console.log(category)
+//         })
+// }
 
 
 //DELETE CATEGORY
@@ -131,7 +130,7 @@ function deleteCategory(){
 
 
 //ADD ACTIVITY BUTTON
-function addActivityButton(category) {
+function activityAddButton(category) {
     const categoryElement = document.getElementById(`category-name-${category.id}`)
     const newActivityButton = document.createElement("button")
     newActivityButton.innerText = "add new"
@@ -169,16 +168,16 @@ function addActivityButton(category) {
 }
 
 
-//ADD NEW ACTIVITY
+//ACTIVITY ADD NEW 
 function submitActivityForm(event) {
     event.preventDefault()
-    const formData = document.getElementById("activityForm")
 
+    const formData = document.getElementById("activityForm")
     const newActivityName = formData.attributes[0].ownerElement[0].value
     const activityUrl = formData.attributes[0].ownerElement[1].value
     const activityNotes = formData.attributes[0].ownerElement[2].value
     const categoryId = formData.attributes[0].ownerElement[3].id
-    
+
     const activityData = {
         name: newActivityName,
         url: activityUrl,
@@ -198,25 +197,25 @@ function submitActivityForm(event) {
             .then(function(resp){
                 return resp.json()
             })
-            .then(function(newActivity){
-                console.log(newActivity)
+            .then(function(data){
+                let newActivity = new Activity(data)
+                let parent = document.getElementById(`parent-category-${newActivity.category_id}`).innerHTML += newActivity.render()
+
+
+                // const activitiesList = document.getElementById(`parent-category-${newActivity.category.id}`)
                 
-                const activitiesList = document.getElementById(`parent-category-${newActivity.category.id}`)
-                const activityData = document.createElement("ul")
-                activityData.id = `activity-${newActivity.id}`
-                // activitiesList.classList += "activities"
-                // activitiesList.setAttribute("parent-category", newActivity.category.id)
-                debugger
-                var activityInfo = newActivity.name + " " + newActivity.url + " " + newActivity.notes
-                activityData.innerHTML += activityInfo
-                activitiesList.appendChild(activityData) 
-                   
+                // activityData.id = `activity-${newActivity.id}`
+                // // activitiesList.classList += "activities"
+                
+                // var activityInfo = newActivity.name + " " + newActivity.url + " " + newActivity.notes
+                // // activitiesList.appendChild(activityData) 
+                
             })
 }
 
-//DELETE ACTIVITY BUTTON
-function deleteActivityButton(el) {
-    console.log(el)
+//ACTIVITY DELETE BUTTON
+function activityDeleteButton(el) {
+    // console.log(el)
     // const deleteButton = document.createElement("button")
     // deleteButton.setAttribute("delete", el.id)
     // deleteButton.innerText = "delete" 
