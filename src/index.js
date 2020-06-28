@@ -49,7 +49,7 @@ function makeCategoryList(category){
         //SHOW ACTIVITIES
         const list = category.activities
         list.forEach((el) => {
-           makeActivityList(el, category)
+           makeActivityList(el, category.id)
         })
         activityAddButton(category)
     })
@@ -69,13 +69,14 @@ function submitCategoryForm(event) {
         body: JSON.stringify(categoryName)
         }
 
-        fetch (CATEGORIES_URL, configObj)
-            .then(function(resp){
-                return resp.json()
-            })
-            .then(function(newCat){
-                makeCategoryList(newCat)
+    fetch (CATEGORIES_URL, configObj)
+        .then(function(resp){
+            return resp.json()
         })
+        .then(function(data){
+            let newCategory = new Category(data)
+            makeCategoryList(newCategory)
+    })
     document.getElementById("title").value=""
 }
 
@@ -125,7 +126,7 @@ function deleteCategory(){
 function activityAddButton(category) {
     const categoryElement = document.getElementById(`category-name-${category.id}`)
     const newActivityButton = document.createElement("button")
-    newActivityButton.innerText = "add new"
+    newActivityButton.innerText = "add activity"
     categoryElement.appendChild(newActivityButton)
 
     newActivityButton.onclick = function() {
@@ -185,27 +186,31 @@ function submitActivityForm(event) {
         body: JSON.stringify(activityData)
     }
 
-        fetch (ACTIVITIES_URL, configObj)
-            .then(function(resp){
-                return resp.json()
-            })
-            .then(function(data){
-                let newActivity = new Activity(data)
-                makeActivityList(newActivity, `${newActivity.category.id}`)                
-            })
+    fetch (ACTIVITIES_URL, configObj)
+        .then(function(resp){
+            return resp.json()
+        })
+        .then(function(data){
+            let newActivity = new Activity(data)
+            makeActivityList(newActivity, newActivity.category_id)                
+        })
+        //document.getElementById("title").value=""
 }
 
 // LIST ACTIVITIES
-function makeActivityList(el, category) {
+function makeActivityList(el, categoryId) {
     const activitiesList = document.createElement("ul")
-    activitiesList.id = `parent-category-${category.id}`
+    activitiesList.id = `parent-category-${categoryId}`
     activitiesList.classList += "activity"
-    activitiesList.setAttribute("parent-category", category.id)
+    activitiesList.setAttribute("parent-category", categoryId)
 
-    const activitiesInfo = el.name + " " + el.url + " " + el.notes
+    const activitiesInfo = new Date().getTime() + "|" + el.name + " | " + el.url + " | " + el.notes
     activitiesList.innerText += activitiesInfo 
-    document.getElementById(`category-name-${category.id}`).appendChild(activitiesList)
-    activityDeleteButton(el)
+    
+    const thing = document.getElementById(`category-name-${categoryId}`);
+    
+    thing.appendChild(activitiesList);
+    //activityDeleteButton(el)
 }
 
 //ACTIVITY DELETE BUTTON
