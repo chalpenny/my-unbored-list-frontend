@@ -5,7 +5,6 @@ class Category {
         this.name = data.name
         Category.all.push(this)  
     }
-   // console.log(data)
 }
 
 Category.all = []

@@ -37,21 +37,30 @@ function makeCategoryList(category){
     // categoryElement.appendChild(editButton)
     // editButton.addEventListener("click", editCategory)
 
+      //DELETE BUTTON
+      const deleteButton = document.createElement("button")
+      deleteButton.setAttribute("delete", category.id)
+      deleteButton.innerText = "delete"
+      categoryElement.appendChild(deleteButton)
+      deleteButton.addEventListener("click", deleteCategory)
+
+      activityAddButton(category)
+
     categoryElement.addEventListener("click", () => {
 
-        //DELETE BUTTON
-        const deleteButton = document.createElement("button")
-        deleteButton.setAttribute("delete", category.id)
-        deleteButton.innerText = "delete"
-        categoryElement.appendChild(deleteButton)
-        deleteButton.addEventListener("click", deleteCategory)
+        function clearActivities() {
+            let activityObj = document.getElementsByClassName("activity");
+            for (let i = activityObj.length; i > 0 ; i--) {
+                activityObj.item(i - 1).remove()
+            }
+        }
+        clearActivities()
 
         //SHOW ACTIVITIES
         const list = category.activities
-        list.forEach((el) => {
-           makeActivityList(el, category.id)
-        })
-        activityAddButton(category)
+            list.forEach((el) => {
+                    makeActivityList(el, category.id)
+        })     
     })
 }
 
@@ -126,7 +135,7 @@ function deleteCategory(){
 function activityAddButton(category) {
     const categoryElement = document.getElementById(`category-name-${category.id}`)
     const newActivityButton = document.createElement("button")
-    newActivityButton.innerText = "add activity"
+    newActivityButton.innerText = "add new"
     categoryElement.appendChild(newActivityButton)
 
     newActivityButton.onclick = function() {
@@ -194,8 +203,8 @@ function submitActivityForm(event) {
             let newActivity = new Activity(data)
             makeActivityList(newActivity, newActivity.category_id)                
         })
-        //document.getElementById("title").value=""
 }
+
 
 // LIST ACTIVITIES
 function makeActivityList(el, categoryId) {
@@ -204,25 +213,25 @@ function makeActivityList(el, categoryId) {
     activitiesList.classList += "activity"
     activitiesList.setAttribute("parent-category", categoryId)
 
-    const activitiesInfo = new Date().getTime() + "|" + el.name + " | " + el.url + " | " + el.notes
+    const activitiesInfo = el.name + " | " + el.url + " | " + el.notes
     activitiesList.innerText += activitiesInfo 
     
     const thing = document.getElementById(`category-name-${categoryId}`);
-    
     thing.appendChild(activitiesList);
     //activityDeleteButton(el)
 }
 
+
 //ACTIVITY DELETE BUTTON
 function activityDeleteButton(el) {
-    // console.log(el)
-    // const deleteButton = document.createElement("button")
-    // deleteButton.setAttribute("delete", el.id)
-    // deleteButton.innerText = "delete" 
+    console.log(el)
+    const deleteButton = document.createElement("button")
+    deleteButton.setAttribute("delete", el.id)
+    deleteButton.innerText = "delete" 
     
-    // const categoryList = document.getElementById(`activity-${el.id}`)
-    // categoryList.appendChild(deleteButton)
-    // //deleteButton.addEventListener("click", deleteActivity)
+    const categoryList = document.getElementById(`activity-${el.id}`)
+    categoryList.appendChild(deleteButton)
+    //deleteButton.addEventListener("click", deleteActivity)
 }
 
 //DELETE ACTIVITY
@@ -244,6 +253,16 @@ function deleteActivity(){
 }
 
 
+/*
+('#clearform').on('click', function () {
+    $('#form_id').find('input:text').val(''); 
+    $('input:checkbox').removeAttr('checked');
+});
+
+OR
+
+ form.reset()
+*/
     // event.preventDefault()
     // const newCategoryName = document.querySelector("#title").value
     // let categoryName = {
@@ -343,10 +362,5 @@ function deleteActivity(){
 
 
     /*
-    create a JS class
-    create prototype
-
-    create one method for rendering activities
-
     either create all your html elements at the beg and hide them or at each click delete them all and rerender them, to avoid the duplicate listings.  OR, a validation. 
     */
