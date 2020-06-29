@@ -201,8 +201,8 @@ function makeActivityList(el, categoryId) {
     const activitiesInfo = el.name + " | " + el.url + " | " + el.notes
     activitiesList.innerText += activitiesInfo 
     
-    const thing = document.getElementById(`category-name-${categoryId}`);
-    thing.appendChild(activitiesList);
+    const categoryList = document.getElementById(`category-name-${categoryId}`);
+    categoryList.appendChild(activitiesList);
     activityDeleteButton(el)
 }
 
