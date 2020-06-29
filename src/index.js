@@ -137,8 +137,18 @@ function activityAddButton(category) {
         
         categoryElement.appendChild(newForm);
         newForm.addEventListener("submit", submitActivityForm)
+        newForm.addEventListener("submit", resetForm)
     }
-    
+}
+
+//RESET ACTIVITY FORM
+function resetForm() {
+    let x = document.getElementById("activityForm")
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
 }
 
 
@@ -181,7 +191,7 @@ function submitActivityForm(event) {
 // LIST ACTIVITIES
 function makeActivityList(el, categoryId) {
     const activitiesList = document.createElement("ul")
-    activitiesList.id = `parent-category-${categoryId}`
+    activitiesList.id = `activity-${el.id}`
     activitiesList.classList += "activity"
     activitiesList.style.color = "rgb(73, 72, 72)"
     activitiesList.style.fontSize = "18px"
@@ -193,20 +203,20 @@ function makeActivityList(el, categoryId) {
     
     const thing = document.getElementById(`category-name-${categoryId}`);
     thing.appendChild(activitiesList);
-    //activityDeleteButton(el)
+    activityDeleteButton(el)
 }
 
 
 //ACTIVITY DELETE BUTTON
 function activityDeleteButton(el) {
-    console.log(el)
     const deleteButton = document.createElement("button")
     deleteButton.setAttribute("delete", el.id)
+    deleteButton.className="buttonClass"
     deleteButton.innerText = "delete" 
     
     const categoryList = document.getElementById(`activity-${el.id}`)
     categoryList.appendChild(deleteButton)
-    //deleteButton.addEventListener("click", deleteActivity)
+    deleteButton.addEventListener("click", deleteActivity)
 }
 
 
@@ -218,12 +228,12 @@ function deleteActivity(){
         headers: {"Content-Type": "application/json"},
         }
 
-        fetch (`${CATEGORIES_URL}` + "/" + `${deleteButId}`, configObj)
+        fetch (`${ACTIVITIES_URL}` + "/" + `${deleteButId}`, configObj)
         .then(function(resp){
             return resp.json()
         })
-        .then(function(category){
-         const deleteBut = document.getElementById(`category-name-${category.id}`)
-         deleteBut.remove()
+        .then(function(activity){
+            const deleteBut = document.getElementById(`activity-${activity.id}`)
+            deleteBut.remove()
         })
 }
