@@ -30,33 +30,26 @@ function makeCategoryList(category){
     categoryElement.innerText = category.name
     categoryList.appendChild(categoryElement)
 
-    // //EDIT BUTTON
-    // const editButton = document.createElement("button")
-    // editButton.setAttribute("edit", category.id)
-    // editButton.innerText = "edit"
-    // categoryElement.appendChild(editButton)
-    // editButton.addEventListener("click", editCategory)
+    //DELETE BUTTON
+    const deleteButton = document.createElement("button")
+    deleteButton.setAttribute("delete", category.id)
+    deleteButton.className="buttonClass"
+    deleteButton.innerText = "delete"
+    categoryElement.appendChild(deleteButton)
+    deleteButton.addEventListener("click", deleteCategory)
 
-      //DELETE BUTTON
-      const deleteButton = document.createElement("button")
-      deleteButton.setAttribute("delete", category.id)
-      deleteButton.innerText = "delete"
-      categoryElement.appendChild(deleteButton)
-      deleteButton.addEventListener("click", deleteCategory)
-
-      activityAddButton(category)
+    activityAddButton(category)
 
     categoryElement.addEventListener("click", () => {
-
+        
+        //SHOW ACTIVITIES
         function clearActivities() {
             let activityObj = document.getElementsByClassName("activity");
             for (let i = activityObj.length; i > 0 ; i--) {
-                activityObj.item(i - 1).remove()
-            }
+                activityObj.item(i - 1).remove()}
         }
-        clearActivities()
 
-        //SHOW ACTIVITIES
+        clearActivities()
         const list = category.activities
             list.forEach((el) => {
                     makeActivityList(el, category.id)
@@ -90,28 +83,6 @@ function submitCategoryForm(event) {
 }
 
 
-// //EDIT CATEGORY
-// function editCategory(){
-//     const editButId = event.target.attributes.edit.value
-//     const configObj = {
-//         method: "PATCH",
-//         headers: {"Content-Type": "application/json"},
-//         }
-
-//         fetch (`${CATEGORIES_URL}` + "/" + `${editButId}`, configObj)
-//         .then(function(resp){
-//             return resp.json()
-//         })
-//         .then(function(category){
-//             const someData = {
-//                 name: document.getElementById(`category-name-${category.id}`).value
-//                }
-//             //    console.log(someData)
-//             //    console.log(category)
-//         })
-// }
-
-
 //DELETE CATEGORY
 function deleteCategory(){
     const deleteButId = event.target.attributes.delete.value
@@ -135,6 +106,7 @@ function deleteCategory(){
 function activityAddButton(category) {
     const categoryElement = document.getElementById(`category-name-${category.id}`)
     const newActivityButton = document.createElement("button")
+    newActivityButton.className="buttonClass"
     newActivityButton.innerText = "add new"
     categoryElement.appendChild(newActivityButton)
 
@@ -165,8 +137,9 @@ function activityAddButton(category) {
         
         categoryElement.appendChild(newForm);
         newForm.addEventListener("submit", submitActivityForm)
-
+        debugger
     }
+    
 }
 
 
@@ -211,6 +184,9 @@ function makeActivityList(el, categoryId) {
     const activitiesList = document.createElement("ul")
     activitiesList.id = `parent-category-${categoryId}`
     activitiesList.classList += "activity"
+    activitiesList.style.color = "rgb(73, 72, 72)"
+    activitiesList.style.fontSize = "18px"
+
     activitiesList.setAttribute("parent-category", categoryId)
 
     const activitiesInfo = el.name + " | " + el.url + " | " + el.notes
@@ -234,6 +210,7 @@ function activityDeleteButton(el) {
     //deleteButton.addEventListener("click", deleteActivity)
 }
 
+
 //DELETE ACTIVITY
 function deleteActivity(){
     const deleteButId = event.target.attributes.delete.value
@@ -251,116 +228,3 @@ function deleteActivity(){
          deleteBut.remove()
         })
 }
-
-
-/*
-('#clearform').on('click', function () {
-    $('#form_id').find('input:text').val(''); 
-    $('input:checkbox').removeAttr('checked');
-});
-
-OR
-
- form.reset()
-*/
-    // event.preventDefault()
-    // const newCategoryName = document.querySelector("#title").value
-    // let categoryName = {
-    //     name: newCategoryName
-    // }
-    // const configObj = {
-    //     method: "POST",
-    //     headers: {"Content-Type": "application/json"},
-    //     body: JSON.stringify(categoryName)
-    //     }
-
-    //     fetch (CATEGORIES_URL, configObj)
-    //         .then(function(resp){
-    //             return resp.json()
-    //         })
-    //         .then(function(newCat){
-    //             makeCategoryList(newCat)
-    //     })
-    // document.getElementById("title").value=""
-
-
- // categoryElement.addEventListener("click", addActivityForm)   
-//     newActivityButton.setAttribute("new-activity", category.id)
-//     newActivityButton.innerText = "add activity"
-//     
-// }
-
-
-
-// //ADD NEW ACTIVITY FORM
-// function addActivityForm(){
-//     console.log(event.currentTarget.id)
-//     const parentCategory = document.getElementById(event.currentTarget.id)
-//     const newActivityForm = document.createElement("form")
-
-//     parentCategory.appendChild(newActivityForm)
-
-    // newActivityButton.id = "add-activity-form"
-        //<input type="text" id="title"></input>
-
-    /*
-    user clicks Add Activity button
-    get Category to add activity to
-    create form
-    append form to DOM
-    save activity form to database on submit
-    */
-
-
-//EDIT ACTIVITY
-
-//DELETE ACTIVITY
-
-
-
-   
-  
-
-    
-
-
-    // const categoryForm = document.getElementById("add-category-form")
-    // categoryForm.addEventListener("submit", (event) => submitCategoryForm(event))
-
-
-
-
-
-    // event.preventDefault()
-    // const newCategoryName = document.querySelector("#title").value
-    // let categoryName = {
-    //     name: newCategoryName
-    // }
-    // const configObj = {
-    //     method: "POST",
-    //     headers: {"Content-Type": "application/json"},
-    //     body: JSON.stringify(categoryName)
-    //     }
-
-    //     fetch (CATEGORIES_URL, configObj)
-    //         .then(function(resp){
-    //             return resp.json()
-    //         })
-    //         .then(function(newCat){
-    //             makeCategoryList(newCat)
-    //     })
-    // document.getElementById("title").value=""
-    
-
-
-
-     //Add URL
-   // categoryElement.addEventListener("click", showActivities(category))
-    // const categoryElement = document.createElement("a") 
-    // categoryElement.setAttribute("href", CATEGORIES_URL)
-    // categoryElement.innerText = category.name
-
-
-    /*
-    either create all your html elements at the beg and hide them or at each click delete them all and rerender them, to avoid the duplicate listings.  OR, a validation. 
-    */
