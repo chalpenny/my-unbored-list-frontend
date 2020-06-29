@@ -137,7 +137,6 @@ function activityAddButton(category) {
         
         categoryElement.appendChild(newForm);
         newForm.addEventListener("submit", submitActivityForm)
-        debugger
     }
     
 }
